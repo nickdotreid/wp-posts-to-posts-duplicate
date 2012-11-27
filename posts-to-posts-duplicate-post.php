@@ -23,9 +23,13 @@ function p2pdc_duplicate_connections($new_post_id, $old_post_object){
 			foreach($users as $user){
 				$connection_meta = array();
 				foreach($relationship->fields as $field){
-					$connection_meta[$field] = p2p_get_meta( $post->p2p_id, $field, true );
+					$connection_meta[$field] = p2p_get_meta( $user->p2p_id, $field, true );
 				}
-				# add user to field
+				if($relationship->direction == 'to'){
+					p2p_type($relationship->name)->connect($new_post_id,$user->ID,$connection_meta);
+				}else{
+					p2p_type($relationship->name)->connect($user->ID,$new_post_id,$connection_meta);	
+				}
 			}
 		}else{
 			$connected = new WP_Query( array(
