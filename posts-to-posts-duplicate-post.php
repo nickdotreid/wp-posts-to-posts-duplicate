@@ -15,8 +15,18 @@ function p2pdc_duplicate_connections($new_post_id, $old_post_object){
 	// get all connection types for post type
 	$relationships = p2pdc_list_relationships(get_post_type($old_post_object));
 	foreach($relationships as $relationship){
-		if($relationship->other_type == 'user'){
-			#clone users 
+		if($relationship->post_type == 'user'){
+			$users = get_users(array(
+			  'connected_type' => $relationship->name,
+			  'connected_items' => $old_post_object,
+			));
+			foreach($users as $user){
+				$connection_meta = array();
+				foreach($relationship->fields as $field){
+					$connection_meta[$field] = p2p_get_meta( $post->p2p_id, $field, true );
+				}
+				# add user to field
+			}
 		}else{
 			$connected = new WP_Query( array(
 			  'connected_type' => $relationship->name,
